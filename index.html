@@ -1,350 +1,306 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="es">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.7">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Super Medix: Salud Pública Bros</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #1a1a1a;
+      color: #fff;
+      font-family: 'Courier New', Courier, monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    h1 {
+      margin: 10px 0 5px;
+      font-size: 22px;
+      color: #4caf50;
+      text-align: center;
+    }
+    #game-container {
+      position: relative;
+      border: 4px solid #fff;
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+    }
+    canvas {
+      background: #70c5ce;
+      display: block;
+    }
+    #ui {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      font-size: 14px;
+      color: #000;
+      text-shadow: 1px 1px #fff;
+      pointer-events: none;
+    }
+    #instructions {
+      margin-top: 10px;
+      font-size: 13px;
+      text-align: center;
+      color: #ccc;
+    }
   </style>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="es"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;Super Medix: Salud Pública Bros&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>body {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: 0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background-color: #1a1a1a;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #fff;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-family: 'Courier New', Courier, monospace;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>flex-direction: column;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>justify-content: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>min-height: 100vh;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>h1 {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: 10px 0 5px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 22px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #4caf50;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>#game-container {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: relative;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border: 4px solid #fff;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>canvas {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #70c5ce;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: block;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>#ui {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: absolute;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>top: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>left: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>right: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>justify-content: space-between;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: bold;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 14px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #000;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-shadow: 1px 1px #fff;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>pointer-events: none;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>#instructions {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 13px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #ccc;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;h1&gt;🎮 SUPER MEDIX: SALUD PÚBLICA BROS 🩺&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="game-container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="ui"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div id="score"&gt;Monedas FESP: 0 / 5&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div id="level"&gt;Nivel 1: Conceptos y FESP&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;canvas id="gameCanvas" width="800" height="400"&gt;&lt;/canvas&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="instructions"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>⬅️ ➡️ Flechas / A-D: Moverse | ⬆️ / Espacio: Saltar &lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>Recoge las &lt;b&gt;Monedas FESP&lt;/b&gt; y elimina a los &lt;b&gt;Goombas Biomédicos&lt;/b&gt; o salta los virus.</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;script&gt;</p>
-<p class="p1">const canvas = document.getElementById('gameCanvas');</p>
-<p class="p1">const ctx = canvas.getContext('2d');</p>
-<p class="p2"><br></p>
-<p class="p1">// Estado del juego</p>
-<p class="p1">let score = 0;</p>
-<p class="p1">let gameOver = false;</p>
-<p class="p1">let gameWon = false;</p>
-<p class="p1">let currentLevel = 1;</p>
-<p class="p1">let message = "";</p>
-<p class="p2"><br></p>
-<p class="p1">// Teclas</p>
-<p class="p1">const keys = { right: false, left: false, up: false };</p>
-<p class="p2"><br></p>
-<p class="p1">document.addEventListener('keydown', (e) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if ((e.key === 'ArrowUp' || e.key === ' ' || e.key === 'w' || e.key === 'W') &amp;&amp; !player.jumping) {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>player.vy = -player.jumpStrength;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>player.jumping = true;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1">});</p>
-<p class="p2"><br></p>
-<p class="p1">document.addEventListener('keyup', (e) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = false;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = false;</p>
-<p class="p1">});</p>
-<p class="p2"><br></p>
-<p class="p1">// Jugador (Dr. Medix)</p>
-<p class="p1">const player = {</p>
-<p class="p1"><span class="Apple-converted-space">  </span>x: 50,</p>
-<p class="p1"><span class="Apple-converted-space">  </span>y: 300,</p>
-<p class="p1"><span class="Apple-converted-space">  </span>width: 30,</p>
-<p class="p1"><span class="Apple-converted-space">  </span>height: 40,</p>
-<p class="p1"><span class="Apple-converted-space">  </span>speed: 5,</p>
-<p class="p1"><span class="Apple-converted-space">  </span>vy: 0,</p>
-<p class="p1"><span class="Apple-converted-space">  </span>gravity: 0.8,</p>
-<p class="p1"><span class="Apple-converted-space">  </span>jumpStrength: 13,</p>
-<p class="p1"><span class="Apple-converted-space">  </span>jumping: false</p>
-<p class="p1">};</p>
-<p class="p2"><br></p>
-<p class="p1">// Plataformas</p>
-<p class="p1">const platforms = [</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{ x: 0, y: 360, width: 2400, height: 40 }, // Suelo largo</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{ x: 200, y: 270, width: 120, height: 20, label: "FESP 1" },</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{ x: 400, y: 200, width: 140, height: 20, label: "Determinantes" },</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{ x: 650, y: 250, width: 120, height: 20, label: "Incidencia" },</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{ x: 900, y: 180, width: 150, height: 20, label: "Prevalencia" },</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{ x: 1200, y: 260, width: 130, height: 20, label: "Hanlon" },</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{ x: 1500, y: 200, width: 160, height: 20, label: "INEGI / DGIS" }</p>
-<p class="p1">];</p>
-<p class="p2"><br></p>
-<p class="p1">// Monedas FESP (Items)</p>
-<p class="p1">const coins = [</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{ x: 230, y: 230, collected: false, info: "FESP: Monitoreo de la Salud" },</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{ x: 450, y: 160, collected: false, info: "Determinante Social Integrado" },</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{ x: 680, y: 210, collected: false, info: "Incidencia: Casos Nuevos" },</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{ x: 930, y: 140, collected: false, info: "Prevalencia: Casos Totales" },</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{ x: 1550, y: 160, collected: false, info: "Fuente de Datos: INEGI/DGIS" }</p>
-<p class="p1">];</p>
-<p class="p2"><br></p>
-<p class="p1">// Enemigos (Reduccionismo Biomédico / Transición Epidemiológica)</p>
-<p class="p1">const enemies = [</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{ x: 350, y: 330, width: 30, height: 30, vx: -2, type: "Biomédico Puro" },</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{ x: 800, y: 330, width: 30, height: 30, vx: 2, type: "Sesgo Estadística" },</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{ x: 1300, y: 330, width: 35, height: 35, vx: -2.5, type: "E. Crónico-Degenerativa" }</p>
-<p class="p1">];</p>
-<p class="p2"><br></p>
-<p class="p1">// Meta / Centro de Salud</p>
-<p class="p1">const goal = { x: 1800, y: 260, width: 60, height: 100 };</p>
-<p class="p2"><br></p>
-<p class="p1">// Camara</p>
-<p class="p1">let cameraX = 0;</p>
-<p class="p2"><br></p>
-<p class="p1">function update() {</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if (gameOver || gameWon) return;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Movimiento Jugador</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if (keys.right) player.x += player.speed;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if (keys.left &amp;&amp; player.x &gt; 0) player.x -= player.speed;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Gravedad</p>
-<p class="p1"><span class="Apple-converted-space">  </span>player.vy += player.gravity;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>player.y += player.vy;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Colisión con Plataformas</p>
-<p class="p1"><span class="Apple-converted-space">  </span>player.jumping = true;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>platforms.forEach(p =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (</p>
-<p class="p1"><span class="Apple-converted-space">      </span>player.x &lt; p.x + p.width &amp;&amp;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>player.x + player.width &gt; p.x &amp;&amp;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>player.y + player.height &gt; p.y &amp;&amp;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>player.y + player.height - player.vy &lt;= p.y</p>
-<p class="p1"><span class="Apple-converted-space">    </span>) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>player.y = p.y - player.height;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>player.vy = 0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>player.jumping = false;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Movimiento Enemigos y Colisión</p>
-<p class="p1"><span class="Apple-converted-space">  </span>enemies.forEach(e =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>e.x += e.vx;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (e.x &lt; 200 || e.x &gt; 1600) e.vx *= -1;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// Colisión con jugador</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (</p>
-<p class="p1"><span class="Apple-converted-space">      </span>player.x &lt; e.x + e.width &amp;&amp;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>player.x + player.width &gt; e.x &amp;&amp;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>player.y &lt; e.y + e.height &amp;&amp;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>player.y + player.height &gt; e.y</p>
-<p class="p1"><span class="Apple-converted-space">    </span>) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>// Si salta encima, elimina enemigo</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (player.vy &gt; 0 &amp;&amp; player.y + player.height - player.vy &lt;= e.y + 10) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>e.x = -999;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>player.vy = -8;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>gameOver = true;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>message = "¡Caíste ante un " + e.type + "! Revisa tus conceptos.";</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Recolectar Monedas FESP</p>
-<p class="p1"><span class="Apple-converted-space">  </span>coins.forEach(c =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (!c.collected &amp;&amp;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>player.x &lt; c.x + 20 &amp;&amp;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>player.x + player.width &gt; c.x &amp;&amp;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>player.y &lt; c.y + 20 &amp;&amp;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>player.y + player.height &gt; c.y) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>c.collected = true;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>score++;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('score').innerText = `Monedas FESP: ${score} / 5`;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>message = "¡Obtenido!: " + c.info;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Llegar a la Meta (Centro de Salud)</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if (</p>
-<p class="p1"><span class="Apple-converted-space">    </span>player.x &lt; goal.x + goal.width &amp;&amp;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>player.x + player.width &gt; goal.x &amp;&amp;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>player.y &lt; goal.y + goal.height &amp;&amp;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>player.y + player.height &gt; goal.y</p>
-<p class="p1"><span class="Apple-converted-space">  </span>) {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (score &gt;= 3) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gameWon = true;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>message = "¡FELICIDADES! Has aprobado Salud Pública e integrado la prevención.";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>message = "¡Necesitas al menos 3 Monedas FESP para habilitar la Clínica!";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Ajustar Cámara</p>
-<p class="p1"><span class="Apple-converted-space">  </span>cameraX = player.x - 200;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if (cameraX &lt; 0) cameraX = 0;</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function draw() {</p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Limpiar Pantalla</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.clearRect(0, 0, canvas.width, canvas.height);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.save();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.translate(-cameraX, 0);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Dibujar Suelo y Plataformas</p>
-<p class="p1"><span class="Apple-converted-space">  </span>platforms.forEach(p =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = "#8B4513";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillRect(p.x, p.y, p.width, p.height);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = "#4CAF50";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillRect(p.x, p.y, p.width, 5); // Pasto superior</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (p.label) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.fillStyle = "#fff";</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.font = "10px Arial";</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.fillText(p.label, p.x + 5, p.y + 15);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Dibujar Monedas</p>
-<p class="p1"><span class="Apple-converted-space">  </span>coins.forEach(c =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (!c.collected) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.fillStyle = "#FFD700";</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.beginPath();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.arc(c.x + 10, c.y + 10, 10, 0, Math.PI * 2);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.fill();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.fillStyle = "#000";</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.font = "bold 10px Arial";</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.fillText("F", c.x + 7, c.y + 14);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Dibujar Enemigos</p>
-<p class="p1"><span class="Apple-converted-space">  </span>enemies.forEach(e =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (e.x &gt; 0) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.fillStyle = "#D32F2F";</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.fillRect(e.x, e.y, e.width, e.height);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>// Ojos</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.fillStyle = "#FFF";</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.fillRect(e.x + 5, e.y + 5, 5, 5);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.fillRect(e.x + 20, e.y + 5, 5, 5);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Dibujar Meta (Centro de Salud)</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillStyle = "#E0E0E0";</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillRect(goal.x, goal.y, goal.width, goal.height);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillStyle = "#D32F2F"; // Cruz Roja</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillRect(goal.x + 25, goal.y + 20, 10, 30);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillRect(goal.x + 15, goal.y + 30, 30, 10);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillStyle = "#000";</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.font = "10px Arial";</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillText("CLÍNICA DSP", goal.x + 2, goal.y + 70);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Dibujar Jugador (Médico/a)</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillStyle = "#FFFFFF"; // Bata médica blanca</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillRect(player.x, player.y, player.width, player.height);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillStyle = "#FFCC80"; // Cabeza</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillRect(player.x + 5, player.y - 10, 20, 10);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillStyle = "#1976D2"; // Estetoscopio</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.fillRect(player.x + 8, player.y + 10, 14, 4);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>ctx.restore();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Pantalla / Mensajes de Info</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if (message) {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = "rgba(0, 0, 0, 0.7)";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillRect(10, 350, 780, 40);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = "#FFF";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.font = "14px Arial";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillText(message, 20, 375);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Game Over / Victoria</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if (gameOver) {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = "rgba(0, 0, 0, 0.85)";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillRect(0, 0, canvas.width, canvas.height);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = "#FF5252";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.font = "30px Arial";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillText("¡GAME OVER!", 300, 180);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.font = "16px Arial";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = "#FFF";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillText("Recarga la página para volver a intentarlo", 260, 220);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>} else if (gameWon) {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = "rgba(0, 100, 0, 0.85)";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillRect(0, 0, canvas.width, canvas.height);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = "#FFD700";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.font = "30px Arial";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillText("¡NIVEL COMPLETADO!", 240, 180);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.font = "16px Arial";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = "#FFF";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillText("Has aplicado con éxito las FESP y las medidas epidemiológicas.", 170, 220);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function gameLoop() {</p>
-<p class="p1"><span class="Apple-converted-space">  </span>update();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>draw();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>requestAnimationFrame(gameLoop);</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">gameLoop();</p>
-<p class="p1">&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+
+  <h1>🎮 SUPER MEDIX: SALUD PÚBLICA BROS 🩺</h1>
+  <div id="game-container">
+    <div id="ui">
+      <div id="score">Monedas FESP: 0 / 5</div>
+      <div id="level">Nivel 1: Conceptos y FESP</div>
+    </div>
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+  </div>
+  <div id="instructions">
+    ⬅️ ➡️ Flechas / A-D: Moverse | ⬆️ / Espacio: Saltar <br>
+    Recoge las <b>Monedas FESP</b> y elimina a los <b>Goombas Biomédicos</b> o salta los virus.
+  </div>
+
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+let score = 0;
+let gameOver = false;
+let gameWon = false;
+let message = "";
+
+const keys = { right: false, left: false, up: false };
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;
+  if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;
+  if ((e.key === 'ArrowUp' || e.key === ' ' || e.key === 'w' || e.key === 'W') && !player.jumping) {
+    player.vy = -player.jumpStrength;
+    player.jumping = true;
+  }
+});
+
+document.addEventListener('keyup', (e) => {
+  if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = false;
+  if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = false;
+});
+
+const player = {
+  x: 50,
+  y: 300,
+  width: 30,
+  height: 40,
+  speed: 5,
+  vy: 0,
+  gravity: 0.8,
+  jumpStrength: 13,
+  jumping: false
+};
+
+const platforms = [
+  { x: 0, y: 360, width: 2400, height: 40 },
+  { x: 200, y: 270, width: 120, height: 20, label: "FESP 1" },
+  { x: 400, y: 200, width: 140, height: 20, label: "Determinantes" },
+  { x: 650, y: 250, width: 120, height: 20, label: "Incidencia" },
+  { x: 900, y: 180, width: 150, height: 20, label: "Prevalencia" },
+  { x: 1200, y: 260, width: 130, height: 20, label: "Hanlon" },
+  { x: 1500, y: 200, width: 160, height: 20, label: "INEGI / DGIS" }
+];
+
+const coins = [
+  { x: 230, y: 230, collected: false, info: "FESP: Monitoreo de la Salud" },
+  { x: 450, y: 160, collected: false, info: "Determinante Social Integrado" },
+  { x: 680, y: 210, collected: false, info: "Incidencia: Casos Nuevos" },
+  { x: 930, y: 140, collected: false, info: "Prevalencia: Casos Totales" },
+  { x: 1550, y: 160, collected: false, info: "Fuente de Datos: INEGI/DGIS" }
+];
+
+const enemies = [
+  { x: 350, y: 330, width: 30, height: 30, vx: -2, type: "Biomédico Puro" },
+  { x: 800, y: 330, width: 30, height: 30, vx: 2, type: "Sesgo Estadística" },
+  { x: 1300, y: 330, width: 35, height: 35, vx: -2.5, type: "E. Crónico-Degenerativa" }
+];
+
+const goal = { x: 1800, y: 260, width: 60, height: 100 };
+let cameraX = 0;
+
+function update() {
+  if (gameOver || gameWon) return;
+
+  if (keys.right) player.x += player.speed;
+  if (keys.left && player.x > 0) player.x -= player.speed;
+
+  player.vy += player.gravity;
+  player.y += player.vy;
+
+  player.jumping = true;
+  platforms.forEach(p => {
+    if (
+      player.x < p.x + p.width &&
+      player.x + player.width > p.x &&
+      player.y + player.height > p.y &&
+      player.y + player.height - player.vy <= p.y
+    ) {
+      player.y = p.y - player.height;
+      player.vy = 0;
+      player.jumping = false;
+    }
+  });
+
+  enemies.forEach(e => {
+    e.x += e.vx;
+    if (e.x < 200 || e.x > 1600) e.vx *= -1;
+
+    if (
+      player.x < e.x + e.width &&
+      player.x + player.width > e.x &&
+      player.y < e.y + e.height &&
+      player.y + player.height > e.y
+    ) {
+      if (player.vy > 0 && player.y + player.height - player.vy <= e.y + 10) {
+        e.x = -999;
+        player.vy = -8;
+      } else {
+        gameOver = true;
+        message = "¡Caíste ante un " + e.type + "! Revisa tus conceptos.";
+      }
+    }
+  });
+
+  coins.forEach(c => {
+    if (!c.collected &&
+        player.x < c.x + 20 &&
+        player.x + player.width > c.x &&
+        player.y < c.y + 20 &&
+        player.y + player.height > c.y) {
+      c.collected = true;
+      score++;
+      document.getElementById('score').innerText = `Monedas FESP: ${score} / 5`;
+      message = "¡Obtenido!: " + c.info;
+    }
+  });
+
+  if (
+    player.x < goal.x + goal.width &&
+    player.x + player.width > goal.x &&
+    player.y < goal.y + goal.height &&
+    player.y + player.height > goal.y
+  ) {
+    if (score >= 3) {
+      gameWon = true;
+      message = "¡FELICIDADES! Has aprobado Salud Pública e integrado la prevención.";
+    } else {
+      message = "¡Necesitas al menos 3 Monedas FESP para habilitar la Clínica!";
+    }
+  }
+
+  cameraX = player.x - 200;
+  if (cameraX < 0) cameraX = 0;
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.save();
+  ctx.translate(-cameraX, 0);
+
+  platforms.forEach(p => {
+    ctx.fillStyle = "#8B4513";
+    ctx.fillRect(p.x, p.y, p.width, p.height);
+    ctx.fillStyle = "#4CAF50";
+    ctx.fillRect(p.x, p.y, p.width, 5);
+
+    if (p.label) {
+      ctx.fillStyle = "#fff";
+      ctx.font = "10px Arial";
+      ctx.fillText(p.label, p.x + 5, p.y + 15);
+    }
+  });
+
+  coins.forEach(c => {
+    if (!c.collected) {
+      ctx.fillStyle = "#FFD700";
+      ctx.beginPath();
+      ctx.arc(c.x + 10, c.y + 10, 10, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#000";
+      ctx.font = "bold 10px Arial";
+      ctx.fillText("F", c.x + 7, c.y + 14);
+    }
+  });
+
+  enemies.forEach(e => {
+    if (e.x > 0) {
+      ctx.fillStyle = "#D32F2F";
+      ctx.fillRect(e.x, e.y, e.width, e.height);
+      ctx.fillStyle = "#FFF";
+      ctx.fillRect(e.x + 5, e.y + 5, 5, 5);
+      ctx.fillRect(e.x + 20, e.y + 5, 5, 5);
+    }
+  });
+
+  ctx.fillStyle = "#E0E0E0";
+  ctx.fillRect(goal.x, goal.y, goal.width, goal.height);
+  ctx.fillStyle = "#D32F2F";
+  ctx.fillRect(goal.x + 25, goal.y + 20, 10, 30);
+  ctx.fillRect(goal.x + 15, goal.y + 30, 30, 10);
+  ctx.fillStyle = "#000";
+  ctx.font = "10px Arial";
+  ctx.fillText("CLÍNICA DSP", goal.x + 2, goal.y + 70);
+
+  ctx.fillStyle = "#FFFFFF";
+  ctx.fillRect(player.x, player.y, player.width, player.height);
+  ctx.fillStyle = "#FFCC80";
+  ctx.fillRect(player.x + 5, player.y - 10, 20, 10);
+  ctx.fillStyle = "#1976D2";
+  ctx.fillRect(player.x + 8, player.y + 10, 14, 4);
+
+  ctx.restore();
+
+  if (message) {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+    ctx.fillRect(10, 350, 780, 40);
+    ctx.fillStyle = "#FFF";
+    ctx.font = "14px Arial";
+    ctx.fillText(message, 20, 375);
+  }
+
+  if (gameOver) {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#FF5252";
+    ctx.font = "30px Arial";
+    ctx.fillText("¡GAME OVER!", 300, 180);
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#FFF";
+    ctx.fillText("Recarga la página para volver a intentarlo", 260, 220);
+  } else if (gameWon) {
+    ctx.fillStyle = "rgba(0, 100, 0, 0.85)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#FFD700";
+    ctx.font = "30px Arial";
+    ctx.fillText("¡NIVEL COMPLETADO!", 240, 180);
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#FFF";
+    ctx.fillText("Has aplicado con éxito las FESP y las medidas epidemiológicas.", 170, 220);
+  }
+}
+
+function gameLoop() {
+  update();
+  draw();
+  requestAnimationFrame(gameLoop);
+}
+
+gameLoop();
+</script>
 </body>
 </html>
