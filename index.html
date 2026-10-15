@@ -25,8 +25,8 @@
       overflow: hidden;
     }
     h1 {
-      margin: 6px 0;
-      font-size: 18px;
+      margin: 8px 0;
+      font-size: 20px;
       color: #4caf50;
       text-align: center;
     }
@@ -51,7 +51,7 @@
       display: flex;
       justify-content: space-between;
       font-weight: bold;
-      font-size: 13px;
+      font-size: 14px;
       color: #000;
       background: rgba(255, 255, 255, 0.92);
       padding: 6px 12px;
@@ -59,7 +59,6 @@
       pointer-events: none;
       z-index: 5;
     }
-    /* Controles Táctiles para Móviles */
     #touch-controls {
       display: flex;
       justify-content: space-between;
@@ -101,7 +100,6 @@
       border-color: #fff;
       font-size: 13px;
     }
-    /* Modal de Preguntas */
     #quiz-modal {
       display: none;
       position: absolute;
@@ -186,7 +184,7 @@
   </div>
 
 <script>
-window.addEventListener('load', function() {
+window.addEventListener('DOMContentLoaded', function() {
   const canvas = document.getElementById('gameCanvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
@@ -266,7 +264,6 @@ window.addEventListener('load', function() {
     { x: 2680, y: 240, width: 160, height: 20, label: "Hanlon & Fuentes" }
   ];
 
-  // 10 PREGUNTAS ULTRA-IMPORTANTES BASADAS EN EL PROGRAMA ACADÉMICO FACMED
   const questions = [
     {
       id: 1, type: 'coin', x: 250, y: 220, collected: false,
@@ -491,4 +488,182 @@ window.addEventListener('load', function() {
         }
       } else if (q.type === 'enemy' && !q.defeated) {
         q.x += q.vx;
-        if (q.x < 350 || q.x >
+        if (q.x < 350 || q.x > 2500) q.vx *= -1;
+
+        if (
+          player.x < q.x + q.width &&
+          player.x + player.width > q.x &&
+          player.y < q.y + q.height &&
+          player.y + player.height > q.y
+        ) {
+          if (player.vy > 0 && player.y + player.height - player.vy <= q.y + 12) {
+            player.vy = -8;
+            triggerQuiz(q);
+          } else {
+            takeDamage();
+          }
+        }
+      }
+    });
+
+    if (
+      player.x < goal.x + goal.width &&
+      player.x + player.width > goal.x &&
+      player.y < goal.y + goal.height &&
+      player.y + player.height > goal.y
+    ) {
+      if (aciertos >= 7) {
+        gameWon = true;
+      } else {
+        message = "¡Requieres al menos 7 aciertos (70%) para ingresar a la Clínica FACMED!";
+      }
+    }
+
+    cameraX = player.x - 200;
+    if (cameraX < 0) cameraX = 0;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.save();
+    ctx.translate(-cameraX, 0);
+
+    platforms.forEach(function(p) {
+      ctx.fillStyle = "#8B4513";
+      ctx.fillRect(p.x, p.y, p.width, p.height);
+      ctx.fillStyle = "#4CAF50";
+      ctx.fillRect(p.x, p.y, p.width, 6);
+
+      if (p.label) {
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 13px Arial";
+        ctx.fillText(p.label, p.x + 8, p.y + 16);
+      }
+    });
+
+    questions.forEach(function(q) {
+      if (q.type === 'coin' && !q.collected) {
+        ctx.fillStyle = "#FFD700";
+        ctx.beginPath();
+        ctx.arc(q.x + 12, q.y + 12, 12, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#000";
+        ctx.font = "bold 12px Arial";
+        ctx.fillText("?", q.x + 8, q.y + 16);
+      } else if (q.type === 'enemy' && !q.defeated) {
+        ctx.fillStyle = "#D32F2F";
+        ctx.beginPath();
+        ctx.arc(q.x + 18, q.y + 18, 16, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#FF5252";
+        for(let a = 0; a < Math.PI*2; a += Math.PI/4) {
+          ctx.fillRect(q.x + 16 + Math.cos(a)*18, q.y + 16 + Math.sin(a)*18, 4, 4);
+        }
+        ctx.fillStyle = "#FFF";
+        ctx.fillRect(q.x + 10, q.y + 12, 5, 5);
+        ctx.fillRect(q.x + 22, q.y + 12, 5, 5);
+        ctx.fillStyle = "#000";
+        ctx.fillRect(q.x + 12, q.y + 14, 2, 2);
+        ctx.fillRect(q.x + 24, q.y + 14, 2, 2);
+      }
+    });
+
+    ctx.fillStyle = "#E0E0E0";
+    ctx.fillRect(goal.x, goal.y, goal.width, goal.height);
+    ctx.fillStyle = "#D32F2F";
+    ctx.fillRect(goal.x + 30, goal.y + 15, 12, 35);
+    ctx.fillRect(goal.x + 18, goal.y + 27, 36, 12);
+    ctx.fillStyle = "#000";
+    ctx.font = "bold 12px Arial";
+    ctx.fillText("FACMED", goal.x + 10, goal.y + 75);
+
+    if (invulnerableTimer % 6 < 3) {
+      const px = player.x;
+      const py = player.y;
+
+      ctx.fillStyle = "#FFFFFF";
+      ctx.fillRect(px + 6, py + 18, 24, 26);
+      
+      ctx.fillStyle = "#1976D2";
+      ctx.fillRect(px + 8, py + 38, 9, 10);
+      ctx.fillRect(px + 19, py + 38, 9, 10);
+
+      ctx.fillStyle = "#FFCC80";
+      ctx.beginPath();
+      ctx.arc(px + 18, py + 12, 11, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#4CAF50";
+      ctx.beginPath();
+      ctx.arc(px + 18, py + 8, 11, Math.PI, Math.PI * 2);
+      ctx.fill();
+      ctx.fillRect(px + 7, py + 6, 22, 4);
+
+      ctx.fillStyle = "#333";
+      ctx.beginPath();
+      ctx.arc(px + 14, py + 11, 2, 0, Math.PI * 2);
+      ctx.arc(px + 22, py + 11, 2, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = "#333";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(px + 18, py + 13, 4, 0.1 * Math.PI, 0.9 * Math.PI);
+      ctx.stroke();
+
+      ctx.strokeStyle = "#000";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(px + 18, py + 24, 6, 0, Math.PI);
+      ctx.stroke();
+      ctx.fillStyle = "#FFD700";
+      ctx.beginPath();
+      ctx.arc(px + 18, py + 30, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.restore();
+
+    if (message && !isPaused) {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
+      ctx.fillRect(10, 340, 780, 45);
+      ctx.fillStyle = "#FFF";
+      ctx.font = "bold 15px Arial";
+      ctx.fillText(message, 20, 368);
+    }
+
+    if (gameOver) {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.9)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#FF5252";
+      ctx.font = "bold 30px Arial";
+      ctx.fillText("¡EXAMEN REPROBADO!", 230, 180);
+      ctx.font = "16px Arial";
+      ctx.fillStyle = "#FFF";
+      ctx.fillText("Agotaste tus vidas. Recarga para repasar el temario de nuevo.", 160, 230);
+    } else if (gameWon) {
+      ctx.fillStyle = "rgba(0, 80, 0, 0.92)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#FFD700";
+      ctx.font = "bold 30px Arial";
+      ctx.fillText("¡APROBASTE SALUD PÚBLICA!", 180, 170);
+      ctx.font = "18px Arial";
+      ctx.fillStyle = "#FFF";
+      ctx.fillText("Obtuviste " + aciertos + " / 10 aciertos (Aprobado >= 7).", 220, 220);
+      ctx.font = "15px Arial";
+      ctx.fillText("¡Has integrado con éxito los Temas 1 y 2 del programa de la FacMed!", 150, 260);
+    }
+  }
+
+  function gameLoop() {
+    update();
+    draw();
+    requestAnimationFrame(gameLoop);
+  }
+
+  gameLoop();
+});
+</script>
+</body>
+</html>
