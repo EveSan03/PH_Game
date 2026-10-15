@@ -8,9 +8,8 @@
     * { 
       box-sizing: border-box; 
       touch-action: manipulation;
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
       user-select: none;
+      -webkit-user-select: none;
     }
     body {
       margin: 0;
@@ -26,8 +25,8 @@
       overflow: hidden;
     }
     h1 {
-      margin: 5px 0;
-      font-size: 18px;
+      margin: 8px 0;
+      font-size: 20px;
       color: #4caf50;
       text-align: center;
     }
@@ -36,7 +35,7 @@
       border: 3px solid #fff;
       box-shadow: 0 0 15px rgba(76, 175, 80, 0.4);
       background-color: #70c5ce;
-      width: 100vw;
+      width: 95vw;
       max-width: 800px;
     }
     canvas {
@@ -52,7 +51,7 @@
       display: flex;
       justify-content: space-between;
       font-weight: bold;
-      font-size: 13px;
+      font-size: 14px;
       color: #000;
       background: rgba(255, 255, 255, 0.9);
       padding: 6px 12px;
@@ -60,19 +59,19 @@
       pointer-events: none;
       z-index: 5;
     }
-    /* Controles Táctiles para Celular */
+    /* Controles Táctiles para Móviles */
     #touch-controls {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      width: 100vw;
+      width: 95vw;
       max-width: 800px;
-      padding: 10px 20px;
-      margin-top: 5px;
+      padding: 10px 10px;
+      margin-top: 8px;
     }
     .d-pad {
       display: flex;
-      gap: 15px;
+      gap: 12px;
     }
     .btn-touch {
       background: #222;
@@ -87,6 +86,7 @@
       align-items: center;
       justify-content: center;
       box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+      cursor: pointer;
     }
     .btn-touch:active {
       background: #4caf50;
@@ -94,7 +94,7 @@
       transform: scale(0.95);
     }
     .btn-jump {
-      width: 90px;
+      width: 95px;
       height: 60px;
       border-radius: 30px;
       background: #1976D2;
@@ -156,7 +156,7 @@
 </head>
 <body>
 
-  <h1>🎮 SUPER MEDIX 🩺</h1>
+  <h1>🎮 SUPER MEDIX: SALUD PÚBLICA BROS 🩺</h1>
   <div id="game-container">
     <div id="ui">
       <div id="score">Aciertos: 0 / 4</div>
@@ -183,425 +183,39 @@
   </div>
 
 <script>
-window.onload = function() {
-  const canvas = document.getElementById('gameCanvas');
-  const ctx = canvas.getContext('2d');
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
 
-  let aciertos = 0;
-  let lives = 4;
-  let gameOver = false;
-  let gameWon = false;
-  let isPaused = false;
-  let message = "";
-  let invulnerableTimer = 0;
+let aciertos = 0;
+let lives = 4;
+let gameOver = false;
+let gameWon = false;
+let isPaused = false;
+let message = "";
+let invulnerableTimer = 0;
 
-  const keys = { right: false, left: false, up: false };
+const keys = { right: false, left: false, up: false };
 
-  // Teclado PC
-  document.addEventListener('keydown', (e) => {
-    if (isPaused) return;
-    if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;
-    if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;
-    if ((e.key === 'ArrowUp' || e.key === ' ' || e.key === 'w' || e.key === 'W') && !player.jumping) {
-      player.vy = -player.jumpStrength;
-      player.jumping = true;
-    }
-  });
-
-  document.addEventListener('keyup', (e) => {
-    if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = false;
-    if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = false;
-  });
-
-  // Táctil Celular
-  const bindTouch = (id, keyName) => {
-    const btn = document.getElementById(id);
-    if(!btn) return;
-    
-    const startHandler = (e) => {
-      e.preventDefault();
-      if (isPaused) return;
-      if (keyName === 'up') {
-        if (!player.jumping) {
-          player.vy = -player.jumpStrength;
-          player.jumping = true;
-        }
-      } else {
-        keys[keyName] = true;
-      }
-    };
-
-    const endHandler = (e) => {
-      e.preventDefault();
-      if (keyName !== 'up') keys[keyName] = false;
-    };
-
-    btn.addEventListener('touchstart', startHandler, {passive: false});
-    btn.addEventListener('touchend', endHandler, {passive: false});
-    btn.addEventListener('mousedown', startHandler);
-    btn.addEventListener('mouseup', endHandler);
-  };
-
-  bindTouch('btn-left', 'left');
-  bindTouch('btn-right', 'right');
-  bindTouch('btn-jump', 'up');
-
-  const player = {
-    x: 50, y: 300, width: 36, height: 48,
-    speed: 5.5, vy: 0, gravity: 0.8, jumpStrength: 15.5, jumping: false
-  };
-
-  const platforms = [
-    { x: 0, y: 360, width: 2400, height: 40 },
-    { x: 220, y: 270, width: 140, height: 20, label: "FESP 1" },
-    { x: 480, y: 220, width: 160, height: 20, label: "Determinantes" },
-    { x: 820, y: 250, width: 150, height: 20, label: "Epidemiología" },
-    { x: 1150, y: 210, width: 160, height: 20, label: "Transición" },
-    { x: 1500, y: 260, width: 160, height: 20, label: "Hanlon/Prioridades" }
-  ];
-
-  const questions = [
-    {
-      id: 1, type: 'coin', x: 270, y: 220, collected: false,
-      text: "1. ¿Cuál es el objeto de estudio fundamental de la Salud Pública?",
-      options: [
-        "La enfermedad individual en el entorno clínico.",
-        "La salud y el proceso salud-enfermedad en las poblaciones humanas.",
-        "La administración exclusiva de hospitales públicos."
-      ],
-      correct: 1
-    },
-    {
-      id: 2, type: 'enemy', x: 420, y: 325, width: 35, height: 35, vx: -1.5, defeated: false,
-      text: "2. ¿Qué caracteriza al 'Modelo Biomédico' del proceso salud-enfermedad?",
-      options: [
-        "Integra dimensiones biológicas, sociales y culturales.",
-        "Se centra principalmente en la causa biológica/patógena e ignora lo social.",
-        "Explica la salud únicamente mediante la transición demográfica."
-      ],
-      correct: 1
-    },
-    {
-      id: 3, type: 'coin', x: 540, y: 170, collected: false,
-      text: "3. En bioestadística, ¿qué mide la INCIDENCIA?",
-      options: [
-        "El número de casos NUEVOS de una enfermedad en un periodo determinado.",
-        "El total de casos existentes (antiguos y nuevos) en la población.",
-        "El porcentaje de personas que fallecen por una causa específica."
-      ],
-      correct: 0
-    },
-    {
-      id: 4, type: 'enemy', x: 900, y: 325, width: 35, height: 35, vx: 2, defeated: false,
-      text: "4. ¿A qué se refiere la 'Transición Epidemiológica' en México?",
-      options: [
-        "Al cambio de un predominio de enfermedades infectocontagiosas a crónico-degenerativas.",
-        "A la reducción acelerada del número de personas adultas mayores.",
-        "Al aumento exclusivo de nacimientos en zonas rurales."
-      ],
-      correct: 0
-    },
-    {
-      id: 5, type: 'coin', x: 1210, y: 160, collected: false,
-      text: "5. ¿Cuál es una fuente de información oficial de salud en México?",
-      options: [
-        "Solo encuestas privadas de laboratorios.",
-        "DGE, DGIS, INEGI y ENSANUT.",
-        "Únicamente los registros de expedientes locales."
-      ],
-      correct: 1
-    },
-    {
-      id: 6, type: 'coin', x: 1550, y: 210, collected: false,
-      text: "6. ¿Para qué se utiliza el Método de Hanlon en Salud Pública?",
-      options: [
-        "Para calcular la mediana y moda epidemiológica.",
-        "Para la definición y priorización de problemas de salud pública.",
-        "Para diagnosticar enfermedades a nivel clínico individual."
-      ],
-      correct: 1
-    }
-  ];
-
-  const goal = { x: 1900, y: 260, width: 70, height: 100 };
-  let cameraX = 0;
-
-  function triggerQuiz(q) {
-    isPaused = true;
-    keys.right = false; keys.left = false;
-    
-    const modal = document.getElementById('quiz-modal');
-    const qText = document.getElementById('quiz-question');
-    const qOptions = document.getElementById('quiz-options');
-    const feedback = document.getElementById('feedback');
-    
-    modal.style.display = 'flex';
-    qText.innerText = q.text;
-    qOptions.innerHTML = '';
-    feedback.innerText = '';
-
-    q.options.forEach((opt, idx) => {
-      const btn = document.createElement('button');
-      btn.className = 'quiz-btn';
-      btn.innerText = opt;
-      btn.onclick = () => {
-        if (idx === q.correct) {
-          feedback.style.color = '#4caf50';
-          feedback.innerText = "¡CORRECTO! +1 Acierto";
-          aciertos++;
-          updateScoreUI();
-          
-          if (q.type === 'coin') {
-            q.collected = true;
-          } else {
-            q.defeated = true;
-            q.x = -999;
-          }
-
-          setTimeout(() => {
-            modal.style.display = 'none';
-            isPaused = false;
-          }, 1200);
-        } else {
-          feedback.style.color = '#ff5252';
-          feedback.innerText = "❌ INCORRECTO. Pierdes 1 vida.";
-          lives--;
-          updateLives();
-          
-          if (q.type === 'coin') {
-            q.collected = true;
-          } else {
-            q.x -= 100;
-          }
-
-          setTimeout(() => {
-            modal.style.display = 'none';
-            isPaused = false;
-            if (lives <= 0) gameOver = true;
-          }, 1500);
-        }
-      };
-      qOptions.appendChild(btn);
-    });
-  }
-
-  function takeDamage() {
-    if (invulnerableTimer > 0) return;
-    lives--;
-    updateLives();
-    invulnerableTimer = 60;
-    player.vy = -8;
-    player.x -= 40;
-    message = "💥 ¡Te contagiaste! -1 Vida";
-    if (lives <= 0) gameOver = true;
-  }
-
-  function updateScoreUI() {
-    document.getElementById('score').innerText = `Aciertos: ${aciertos} / 4`;
-  }
-
-  function updateLives() {
-    let h = "";
-    for(let i=0; i<lives; i++) h += "❤️";
-    document.getElementById('lives').innerText = "Vidas: " + h;
-  }
-
-  function update() {
-    if (gameOver || gameWon || isPaused) return;
-
-    if (invulnerableTimer > 0) invulnerableTimer--;
-
-    if (keys.right) player.x += player.speed;
-    if (keys.left && player.x > 0) player.x -= player.speed;
-
-    player.vy += player.gravity;
-    player.y += player.vy;
-
+// Eventos Teclado PC
+document.addEventListener('keydown', (e) => {
+  if (isPaused) return;
+  if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;
+  if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;
+  if ((e.key === 'ArrowUp' || e.key === ' ' || e.key === 'w' || e.key === 'W') && !player.jumping) {
+    player.vy = -player.jumpStrength;
     player.jumping = true;
-    platforms.forEach(p => {
-      if (
-        player.x < p.x + p.width &&
-        player.x + player.width > p.x &&
-        player.y + player.height > p.y &&
-        player.y + player.height - player.vy <= p.y
-      ) {
-        player.y = p.y - player.height;
-        player.vy = 0;
-        player.jumping = false;
-      }
-    });
-
-    questions.forEach(q => {
-      if (q.type === 'coin' && !q.collected) {
-        if (
-          player.x < q.x + 24 &&
-          player.x + player.width > q.x &&
-          player.y < q.y + 24 &&
-          player.y + player.height > q.y
-        ) {
-          triggerQuiz(q);
-        }
-      } else if (q.type === 'enemy' && !q.defeated) {
-        q.x += q.vx;
-        if (q.x < 350 || q.x > 1100) q.vx *= -1;
-
-        if (
-          player.x < q.x + q.width &&
-          player.x + player.width > q.x &&
-          player.y < q.y + q.height &&
-          player.y + player.height > q.y
-        ) {
-          if (player.vy > 0 && player.y + player.height - player.vy <= q.y + 12) {
-            player.vy = -8;
-            triggerQuiz(q);
-          } else {
-            takeDamage();
-          }
-        }
-      }
-    });
-
-    if (
-      player.x < goal.x + goal.width &&
-      player.x + player.width > goal.x &&
-      player.y < goal.y + goal.height &&
-      player.y + player.height > goal.y
-    ) {
-      if (aciertos >= 3) {
-        gameWon = true;
-      } else {
-        message = "¡Necesitas al menos 3 aciertos para entrar a la Clínica!";
-      }
-    }
-
-    cameraX = player.x - 200;
-    if (cameraX < 0) cameraX = 0;
   }
+});
 
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+document.addEventListener('keyup', (e) => {
+  if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = false;
+  if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = false;
+});
 
-    ctx.save();
-    ctx.translate(-cameraX, 0);
+// Eventos Táctiles Móvil
+function setupTouch(id, action) {
+  const btn = document.getElementById(id);
+  if (!btn) return;
 
-    platforms.forEach(p => {
-      ctx.fillStyle = "#8B4513";
-      ctx.fillRect(p.x, p.y, p.width, p.height);
-      ctx.fillStyle = "#4CAF50";
-      ctx.fillRect(p.x, p.y, p.width, 6);
-
-      if (p.label) {
-        ctx.fillStyle = "#fff";
-        ctx.font = "bold 13px Arial";
-        ctx.fillText(p.label, p.x + 10, p.y + 16);
-      }
-    });
-
-    questions.forEach(q => {
-      if (q.type === 'coin' && !q.collected) {
-        ctx.fillStyle = "#FFD700";
-        ctx.beginPath();
-        ctx.arc(q.x + 12, q.y + 12, 12, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = "#000";
-        ctx.font = "bold 12px Arial";
-        ctx.fillText("?", q.x + 8, q.y + 16);
-      } else if (q.type === 'enemy' && !q.defeated) {
-        ctx.fillStyle = "#D32F2F";
-        ctx.beginPath();
-        ctx.arc(q.x + 18, q.y + 18, 16, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = "#FF5252";
-        for(let a=0; a<Math.PI*2; a+=Math.PI/4) {
-          ctx.fillRect(q.x + 16 + Math.cos(a)*18, q.y + 16 + Math.sin(a)*18, 4, 4);
-        }
-        ctx.fillStyle = "#FFF";
-        ctx.fillRect(q.x + 10, q.y + 12, 5, 5);
-        ctx.fillRect(q.x + 22, q.y + 12, 5, 5);
-        ctx.fillStyle = "#000";
-        ctx.fillRect(q.x + 12, q.y + 14, 2, 2);
-        ctx.fillRect(q.x + 24, q.y + 14, 2, 2);
-      }
-    });
-
-    ctx.fillStyle = "#E0E0E0";
-    ctx.fillRect(goal.x, goal.y, goal.width, goal.height);
-    ctx.fillStyle = "#D32F2F";
-    ctx.fillRect(goal.x + 30, goal.y + 15, 12, 35);
-    ctx.fillRect(goal.x + 18, goal.y + 27, 36, 12);
-    ctx.fillStyle = "#000";
-    ctx.font = "bold 12px Arial";
-    ctx.fillText("FACMED", goal.x + 10, goal.y + 75);
-
-    if (invulnerableTimer % 6 < 3) {
-      const px = player.x;
-      const py = player.y;
-
-      ctx.fillStyle = "#FFFFFF";
-      ctx.fillRect(px + 6, py + 18, 24, 26);
-      
-      ctx.fillStyle = "#1976D2";
-      ctx.fillRect(px + 8, py + 38, 9, 10);
-      ctx.fillRect(px + 19, py + 38, 9, 10);
-
-      ctx.fillStyle = "#FFCC80";
-      ctx.beginPath();
-      ctx.arc(px + 18, py + 12, 11, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.fillStyle = "#4CAF50";
-      ctx.beginPath();
-      ctx.arc(px + 18, py + 8, 11, Math.PI, Math.PI * 2);
-      ctx.fill();
-      ctx.fillRect(px + 7, py + 6, 22, 4);
-
-      ctx.fillStyle = "#333";
-      ctx.beginPath();
-      ctx.arc(px + 14, py + 11, 2, 0, Math.PI * 2);
-      ctx.arc(px + 22, py + 11, 2, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.strokeStyle = "#333";
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.arc(px + 18, py + 13, 4, 0.1 * Math.PI, 0.9 * Math.PI);
-      ctx.stroke();
-
-      ctx.strokeStyle = "#000";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(px + 18, py + 24, 6, 0, Math.PI);
-      ctx.stroke();
-      ctx.fillStyle = "#FFD700";
-      ctx.beginPath();
-      ctx.arc(px + 18, py + 30, 3, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    ctx.restore();
-
-    if (message && !isPaused) {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-      ctx.fillRect(10, 340, 780, 45);
-      ctx.fillStyle = "#FFF";
-      ctx.font = "bold 15px Arial";
-      ctx.fillText(message, 20, 368);
-    }
-
-    if (gameOver) {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.9)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#FF5252";
-      ctx.font = "bold 30px Arial";
-      ctx.fillText("¡EXAMEN REPROBADO!", 230, 180);
-      ctx.font = "16px Arial";
-      ctx.fillStyle = "#FFF";
-      ctx.fillText("Te faltó repasar los conceptos. Recarga para estudiar de nuevo.", 150, 230);
-    } else if (gameWon) {
-      ctx.fillStyle = "rgba(0, 80, 0, 0.9)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#FFD700";
-      ctx.font = "bold 30px Arial";
-      ctx.fillText("¡APROBASTE SALUD PÚBLICA!", 180, 180);
-      ctx.font = "16px Arial";
-      ctx.fillStyle
+  const press = (e) => {
+    e.preventDefault();
