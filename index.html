@@ -185,112 +185,323 @@
   </div>
 
 <script>
-window.onload = function() {
-  const canvas = document.getElementById('gameCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
 
-  let aciertos = 0;
-  let lives = 4;
-  let gameOver = false;
-  let gameWon = false;
-  let isPaused = false;
-  let message = "";
-  let invulnerableTimer = 0;
+let aciertos = 0;
+let lives = 4;
+let gameOver = false;
+let gameWon = false;
+let isPaused = false;
+let message = "";
+let invulnerableTimer = 0;
 
-  const keys = { right: false, left: false, up: false };
+const keys = { right: false, left: false, up: false };
 
-  document.addEventListener('keydown', function(e) {
+document.addEventListener('keydown', function(e) {
+  if (isPaused) return;
+  if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;
+  if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;
+  if ((e.key === 'ArrowUp' || e.key === ' ' || e.key === 'w' || e.key === 'W') && !player.jumping) {
+    player.vy = -player.jumpStrength;
+    player.jumping = true;
+  }
+});
+
+document.addEventListener('keyup', function(e) {
+  if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = false;
+  if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = false;
+});
+
+function setupTouch(id, action) {
+  const btn = document.getElementById(id);
+  if (!btn) return;
+
+  function press(e) {
+    if (e.cancelable) e.preventDefault();
     if (isPaused) return;
-    if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;
-    if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;
-    if ((e.key === 'ArrowUp' || e.key === ' ' || e.key === 'w' || e.key === 'W') && !player.jumping) {
-      player.vy = -player.jumpStrength;
-      player.jumping = true;
-    }
-  });
-
-  document.addEventListener('keyup', function(e) {
-    if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = false;
-    if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = false;
-  });
-
-  function setupTouch(id, action) {
-    const btn = document.getElementById(id);
-    if (!btn) return;
-
-    function press(e) {
-      if (e.cancelable) e.preventDefault();
-      if (isPaused) return;
-      if (action === 'jump') {
-        if (!player.jumping) {
-          player.vy = -player.jumpStrength;
-          player.jumping = true;
-        }
-      } else {
-        keys[action] = true;
+    if (action === 'jump') {
+      if (!player.jumping) {
+        player.vy = -player.jumpStrength;
+        player.jumping = true;
       }
+    } else {
+      keys[action] = true;
     }
-
-    function release(e) {
-      if (e.cancelable) e.preventDefault();
-      if (action !== 'jump') keys[action] = false;
-    }
-
-    btn.addEventListener('touchstart', press, { passive: false });
-    btn.addEventListener('touchend', release, { passive: false });
-    btn.addEventListener('mousedown', press);
-    btn.addEventListener('mouseup', release);
   }
 
-  setupTouch('btn-left', 'left');
-  setupTouch('btn-right', 'right');
-  setupTouch('btn-jump', 'jump');
+  function release(e) {
+    if (e.cancelable) e.preventDefault();
+    if (action !== 'jump') keys[action] = false;
+  }
 
-  const player = {
-    x: 50, y: 300, width: 36, height: 48,
-    speed: 5.5, vy: 0, gravity: 0.8, jumpStrength: 15.5, jumping: false
-  };
+  btn.addEventListener('touchstart', press, { passive: false });
+  btn.addEventListener('touchend', release, { passive: false });
+  btn.addEventListener('mousedown', press);
+  btn.addEventListener('mouseup', release);
+}
 
-  const platforms = [
-    { x: 0, y: 360, width: 4200, height: 40 },
-    { x: 200, y: 270, width: 160, height: 20, label: "Salud Pública" },
-    { x: 500, y: 230, width: 160, height: 20, label: "Concepto OMS" },
-    { x: 850, y: 260, width: 160, height: 20, label: "FESP: Evaluación" },
-    { x: 1200, y: 220, width: 160, height: 20, label: "FESP: Promoción" },
-    { x: 1550, y: 260, width: 160, height: 20, label: "FESP: Acceso" },
-    { x: 1900, y: 220, width: 160, height: 20, label: "Epidemiología" },
-    { x: 2250, y: 260, width: 160, height: 20, label: "Incidencia/Prevalencia" },
-    { x: 2600, y: 210, width: 160, height: 20, label: "Transición" },
-    { x: 2950, y: 250, width: 160, height: 20, label: "Perfil Nal." },
-    { x: 3300, y: 210, width: 160, height: 20, label: "Hanlon" },
-    { x: 3650, y: 250, width: 160, height: 20, label: "Fuentes Oficiales" }
-  ];
+setupTouch('btn-left', 'left');
+setupTouch('btn-right', 'right');
+setupTouch('btn-jump', 'jump');
 
-  // 12 PREGUNTAS TOTALES REINTENTABLES
-  const questions = [
-    {
-      id: 1, type: 'coin', x: 250, y: 220, solved: false,
-      text: "1. De acuerdo con Julio Frenk, ¿cuál es la esencia del concepto moderno de Salud Pública?",
-      options: [
-        "A) La atención médica individualizada en el consultorio privado.",
-        "B) La aplicación de conocimientos biológicos y sociales para la salud de las poblaciones.",
-        "C) La administración exclusiva de infraestructura hospitalaria."
-      ],
-      correct: 1
-    },
-    {
-      id: 2, type: 'enemy', x: 550, y: 190, width: 35, height: 35, vx: -1.2, minX: 500, maxX: 640, solved: false,
-      text: "2. ¿Cómo define la Organización Mundial de la Salud (OMS) el concepto de SALUD?",
-      options: [
-        "A) La ausencia total de enfermedades, gérmenes e invalidez.",
-        "B) Un estado de completo bienestar físico, mental y social, y no solo la ausencia de afecciones.",
-        "C) El correcto funcionamiento biológico de los órganos vitales."
-      ],
-      correct: 1
-    },
-    {
-      id: 3, type: 'coin', x: 900, y: 210, solved: false,
-      text: "3. ¿A qué pilar de las FESP pertenece la vigilancia epidemiológica y evaluación del estado de salud poblacional?",
-      options: [
-        "A) Evaluación
+const player = {
+  x: 50, y: 300, width: 36, height: 48,
+  speed: 5.5, vy: 0, gravity: 0.8, jumpStrength: 15.5, jumping: false
+};
+
+const platforms = [
+  { x: 0, y: 360, width: 4200, height: 40 },
+  { x: 200, y: 270, width: 160, height: 20, label: "Salud Pública" },
+  { x: 500, y: 230, width: 160, height: 20, label: "Concepto OMS" },
+  { x: 850, y: 260, width: 160, height: 20, label: "FESP: Evaluación" },
+  { x: 1200, y: 220, width: 160, height: 20, label: "FESP: Promoción" },
+  { x: 1550, y: 260, width: 160, height: 20, label: "FESP: Acceso" },
+  { x: 1900, y: 220, width: 160, height: 20, label: "Epidemiología" },
+  { x: 2250, y: 260, width: 160, height: 20, label: "Incidencia/Prevalencia" },
+  { x: 2600, y: 210, width: 160, height: 20, label: "Transición" },
+  { x: 2950, y: 250, width: 160, height: 20, label: "Perfil Nal." },
+  { x: 3300, y: 210, width: 160, height: 20, label: "Hanlon" },
+  { x: 3650, y: 250, width: 160, height: 20, label: "Fuentes Oficiales" }
+];
+
+const questions = [
+  {
+    id: 1, type: 'coin', x: 250, y: 220, solved: false,
+    text: "1. De acuerdo con Julio Frenk, ¿cuál es la esencia del concepto moderno de Salud Pública?",
+    options: [
+      "A) La atención médica individualizada en el consultorio privado.",
+      "B) La aplicación de conocimientos biológicos y sociales para la salud de las poblaciones.",
+      "C) La administración exclusiva de infraestructura hospitalaria."
+    ],
+    correct: 1
+  },
+  {
+    id: 2, type: 'enemy', x: 550, y: 190, width: 35, height: 35, vx: -1.2, minX: 500, maxX: 640, solved: false,
+    text: "2. ¿Cómo define la Organización Mundial de la Salud (OMS) el concepto de SALUD?",
+    options: [
+      "A) La ausencia total de enfermedades, gérmenes e invalidez.",
+      "B) Un estado de completo bienestar físico, mental y social, y no solo la ausencia de afecciones.",
+      "C) El correcto funcionamiento biológico de los órganos vitales."
+    ],
+    correct: 1
+  },
+  {
+    id: 3, type: 'coin', x: 900, y: 210, solved: false,
+    text: "3. ¿A qué pilar de las FESP pertenece la vigilancia epidemiológica y evaluación del estado de salud poblacional?",
+    options: [
+      "A) Evaluación y análisis de la situación de salud.",
+      "B) Asignación directa de insumos médicos.",
+      "C) Investigación clínica privada."
+    ],
+    correct: 0
+  },
+  {
+    id: 4, type: 'enemy', x: 1250, y: 180, width: 35, height: 35, vx: 1.5, minX: 1200, maxX: 1340, solved: false,
+    text: "4. En el marco renovado de las FESP, ¿cuál es la meta de la 'Promoción de la Salud y Participación Ciudadana'?",
+    options: [
+      "A) Empoderar a la comunidad y modificar determinantes sociales de la salud.",
+      "B) Sancionar económicamente a los ciudadanos con estilos de vida sedentarios.",
+      "C) Obligar el uso de medicamentos preventivos de amplio espectro."
+    ],
+    correct: 0
+  },
+  {
+    id: 5, type: 'coin', x: 1600, y: 210, solved: false,
+    text: "5. ¿Cuál es la función esencial (FESP) orientada a garantizar que toda la población reciba atención de calidad?",
+    options: [
+      "A) Garantía de acceso equitativo a servicios de salud integrales.",
+      "B) Auditoría contable del sistema hospitalario privado.",
+      "C) Regulación del mercado farmacéutico internacional."
+    ],
+    correct: 0
+  },
+  {
+    id: 6, type: 'enemy', x: 1950, y: 180, width: 35, height: 35, vx: -1.5, minX: 1900, maxX: 2040, solved: false,
+    text: "6. ¿Cuáles son las variables fundamentales del Método Epidemiológico para describir un problema colectivo?",
+    options: [
+      "A) Tiempo, Lugar y Persona.",
+      "B) Tensión, Frecuencia y Temperatura.",
+      "C) Media, Mediana y Desviación Estándar."
+    ],
+    correct: 0
+  },
+  {
+    id: 7, type: 'coin', x: 2300, y: 210, solved: false,
+    text: "7. En Bioestadística, ¿qué diferencia a la INCIDENCIA de la PREVALENCIA?",
+    options: [
+      "A) Incidencia evalúa casos NUEVOS; Prevalencia mide TODOS los casos acumulados existentes.",
+      "B) Incidencia mide muertes registradas; Prevalencia mide nacimientos anuales.",
+      "C) Ambas indican exactamente la misma tasa de mortalidad."
+    ],
+    correct: 0
+  },
+  {
+    id: 8, type: 'enemy', x: 2650, y: 170, width: 35, height: 35, vx: 1.2, minX: 2600, maxX: 2740, solved: false,
+    text: "8. ¿En qué consiste la Transición Epidemiológica observada en México?",
+    options: [
+      "A) Cambio del predominio de patologías infecciosas a enfermedades crónico-degenerativas.",
+      "B) Incremento acelerado de nacimientos en zonas urbanas.",
+      "C) Eliminación total de enfermedades transmisibles e infectocontagiosas."
+    ],
+    correct: 0
+  },
+  {
+    id: 9, type: 'coin', x: 3000, y: 200, solved: false,
+    text: "9. ¿Cuál es una tendencia característica de la Transición Demográfica en México?",
+    options: [
+      "A) Disminución de la natalidad e incremento progresivo de adultos mayores.",
+      "B) Aumento de la fecundidad en edades tempranas.",
+      "C) Disminución drástica de la esperanza de vida al nacer."
+    ],
+    correct: 0
+  },
+  {
+    id: 10, type: 'enemy', x: 3350, y: 170, width: 35, height: 35, vx: -1.5, minX: 3300, maxX: 3440, solved: false,
+    text: "10. ¿Para qué aplica el médico general el Método de Hanlon en Salud Pública?",
+    options: [
+      "A) Para priorizar problemas de salud considerando magnitud, severidad e intervención.",
+      "B) Para calcular la dosis ponderada de un fármaco.",
+      "C) Para determinar el tipo de muestra microbiológica requerida."
+    ],
+    correct: 0
+  },
+  {
+    id: 11, type: 'coin', x: 3700, y: 200, solved: false,
+    text: "11. ¿Cuáles son fuentes oficiales nacionales prioritarias para obtener indicadores de salud en México?",
+    options: [
+      "A) DGE, DGIS, INEGI, CONAPO y ENSANUT.",
+      "B) Expedientes aislados de sanatorios privados.",
+      "C) Encuestas informales de redes sociales."
+    ],
+    correct: 0
+  },
+  {
+    id: 12, type: 'enemy', x: 3950, y: 325, width: 35, height: 35, vx: -1.8, minX: 3850, maxX: 4100, solved: false,
+    text: "12. ¿Cómo se define el indicador de LETALIDAD en un evento de salud pública?",
+    options: [
+      "A) La proporción de personas enfermas de una causa específica que fallecen por la misma.",
+      "B) El porcentaje total de vacunas aplicadas en una jornada.",
+      "C) La cantidad de personas expuestas a un riesgo determinado."
+    ],
+    correct: 0
+  }
+];
+
+const goal = { x: 4200, y: 260, width: 70, height: 100 };
+let cameraX = 0;
+
+function triggerQuiz(q) {
+  isPaused = true;
+  keys.right = false; 
+  keys.left = false;
+  
+  const modal = document.getElementById('quiz-modal');
+  const qText = document.getElementById('quiz-question');
+  const qOptions = document.getElementById('quiz-options');
+  const feedback = document.getElementById('feedback');
+  
+  modal.style.display = 'flex';
+  qText.innerText = q.text;
+  qOptions.innerHTML = '';
+  feedback.innerText = '';
+
+  q.options.forEach(function(opt, idx) {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-btn';
+    btn.innerText = opt;
+    btn.onclick = function() {
+      if (idx === q.correct) {
+        feedback.style.color = '#4caf50';
+        feedback.innerText = "¡CORRECTO! +1 Acierto";
+        aciertos++;
+        q.solved = true;
+        if (q.type === 'enemy') q.x = -999;
+        updateScoreUI();
+
+        setTimeout(function() {
+          modal.style.display = 'none';
+          isPaused = false;
+        }, 1200);
+      } else {
+        feedback.style.color = '#ff5252';
+        feedback.innerText = "❌ INCORRECTO. Pierdes 1 vida (Puedes volver a intentarlo).";
+        lives--;
+        updateLives();
+        player.x -= 60;
+
+        setTimeout(function() {
+          modal.style.display = 'none';
+          isPaused = false;
+          if (lives <= 0) gameOver = true;
+        }, 1600);
+      }
+    };
+    qOptions.appendChild(btn);
+  });
+}
+
+function takeDamage() {
+  if (invulnerableTimer > 0) return;
+  lives--;
+  updateLives();
+  invulnerableTimer = 60;
+  player.vy = -6;
+  player.x -= 50;
+  message = "💥 ¡Un virus te contagió! Pierdes 1 Vida.";
+  if (lives <= 0) gameOver = true;
+}
+
+function updateScoreUI() {
+  document.getElementById('score').innerText = "Aciertos: " + aciertos + " (Mínimo 7 para Aprobar)";
+}
+
+function updateLives() {
+  let h = "";
+  for(let i = 0; i < lives; i++) h += "❤️";
+  document.getElementById('lives').innerText = "Vidas: " + h;
+}
+
+function update() {
+  if (gameOver || gameWon || isPaused) return;
+
+  if (invulnerableTimer > 0) invulnerableTimer--;
+
+  if (keys.right) player.x += player.speed;
+  if (keys.left && player.x > 0) player.x -= player.speed;
+
+  player.vy += player.gravity;
+  player.y += player.vy;
+
+  player.jumping = true;
+  platforms.forEach(function(p) {
+    if (
+      player.x < p.x + p.width &&
+      player.x + player.width > p.x &&
+      player.y + player.height > p.y &&
+      player.y + player.height - player.vy <= p.y
+    ) {
+      player.y = p.y - player.height;
+      player.vy = 0;
+      player.jumping = false;
+    }
+  });
+
+  questions.forEach(function(q) {
+    if (q.type === 'coin' && !q.solved) {
+      if (
+        player.x < q.x + 24 &&
+        player.x + player.width > q.x &&
+        player.y < q.y + 24 &&
+        player.y + player.height > q.y
+      ) {
+        triggerQuiz(q);
+      }
+    } else if (q.type === 'enemy' && !q.solved) {
+      q.x += q.vx;
+      if (q.x < q.minX || q.x > q.maxX) q.vx *= -1;
+
+      if (
+        player.x < q.x + q.width &&
+        player.x + player.width > q.x &&
+        player.y < q.y + q.height &&
