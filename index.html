@@ -253,122 +253,123 @@ window.onload = function() {
   };
 
   const platforms = [
-    { x: 0, y: 360, width: 3400, height: 40 },
+    { x: 0, y: 360, width: 3800, height: 40 },
     { x: 200, y: 270, width: 140, height: 20, label: "Salud Pública" },
-    { x: 450, y: 220, width: 150, height: 20, label: "FESP" },
-    { x: 750, y: 250, width: 160, height: 20, label: "Modelos Teóricos" },
-    { x: 1050, y: 210, width: 150, height: 20, label: "Bioestadística" },
-    { x: 1380, y: 260, width: 160, height: 20, label: "Epidemiología" },
-    { x: 1700, y: 210, width: 150, height: 20, label: "Ocurrencia" },
-    { x: 2020, y: 250, width: 160, height: 20, label: "Transición" },
-    { x: 2350, y: 200, width: 150, height: 20, label: "Perfil Nal." },
-    { x: 2680, y: 240, width: 160, height: 20, label: "Hanlon & Fuentes" }
+    { x: 500, y: 230, width: 160, height: 20, label: "Concepto OMS" },
+    { x: 850, y: 260, width: 160, height: 20, label: "FESP: Monitoreo" },
+    { x: 1200, y: 220, width: 160, height: 20, label: "FESP: Políticas" },
+    { x: 1550, y: 260, width: 160, height: 20, label: "FESP: Acceso" },
+    { x: 1900, y: 220, width: 160, height: 20, label: "Epidemiología" },
+    { x: 2250, y: 260, width: 160, height: 20, label: "Incidencia/Prevalencia" },
+    { x: 2600, y: 210, width: 160, height: 20, label: "Transición" },
+    { x: 2950, y: 250, width: 160, height: 20, label: "Hanlon & Fuentes" }
   ];
 
+  // BANCO DE 10 PREGUNTAS ENFOCADAS EN CONCEPTO OMS, SALUD PÚBLICA Y FESP
   const questions = [
     {
       id: 1, type: 'coin', x: 250, y: 220, collected: false,
-      text: "1. ¿Cuál es el objeto de estudio fundamental de la Salud Pública?",
+      text: "1. De acuerdo con Julio Frenk, ¿cuál es la esencia del concepto moderno de Salud Pública?",
       options: [
-        "A) La atención clínica y curación individual en consultorio.",
-        "B) La salud y el proceso salud-enfermedad en las poblaciones humanas.",
-        "C) La administración exclusiva de insumos hospitalarios."
+        "A) La atención médica individualizada en el consultorio privado.",
+        "B) La aplicación de conocimientos biológicos y sociales para la salud de las poblaciones.",
+        "C) La administración exclusiva de infraestructura hospitalaria."
       ],
       correct: 1
     },
     {
-      id: 2, type: 'enemy', x: 480, y: 325, width: 35, height: 35, vx: -1.5, defeated: false,
-      text: "2. ¿Cuál es el propósito central de las Funciones Esenciales de la Salud Pública (FESP)?",
+      id: 2, type: 'enemy', x: 550, y: 190, width: 35, height: 35, vx: -1.2, minX: 500, maxX: 640, defeated: false,
+      text: "2. ¿Cómo define la Organización Mundial de la Salud (OMS) el concepto de SALUD?",
       options: [
-        "A) Orientar la respuesta institucional ante problemas prioritarios de salud pública.",
-        "B) Diagnosticar sintomatologías raras en pacientes individuales.",
-        "C) Sustituir el expediente clínico por datos de laboratorio privados."
-      ],
-      correct: 0
-    },
-    {
-      id: 3, type: 'coin', x: 800, y: 200, collected: false,
-      text: "3. ¿Qué caracteriza al 'Modelo Biomédico' del proceso salud-enfermedad?",
-      options: [
-        "A) Considera dimensiones sociales, económicas y culturales.",
-        "B) Se centra predominantemente en la causa biológica/patógena e ignora lo social.",
-        "C) Prioriza la promoción de la salud por encima del tratamiento patológico."
+        "A) La ausencia total de enfermedades, gérmenes e invalidez.",
+        "B) Un estado de completo bienestar físico, mental y social, y no solo la ausencia de afecciones.",
+        "C) El correcto funcionamiento biológico de los órganos vitales."
       ],
       correct: 1
     },
     {
-      id: 4, type: 'enemy', x: 1100, y: 325, width: 35, height: 35, vx: 2, defeated: false,
-      text: "4. En Bioestadística, ¿cuál es la diferencia clave entre INCIDENCIA y PREVALENCIA?",
+      id: 3, type: 'coin', x: 900, y: 210, collected: false,
+      text: "3. ¿A qué pilar de las FESP pertenece la vigilancia epidemiológica y evaluación del estado de salud poblacional?",
       options: [
-        "A) La Incidencia mide casos NUEVOS; la Prevalencia mide la TOTALIDAD de casos existentes.",
-        "B) La Incidencia mide fallecimientos; la Prevalencia mide contagios leves.",
-        "C) Ambas corresponden exactamente a la misma tasa de mortalidad general."
+        "A) Evaluación y análisis de la situación de salud.",
+        "B) Asignación directa de insumos médicos.",
+        "C) Investigación clínica privada."
       ],
       correct: 0
     },
     {
-      id: 5, type: 'coin', x: 1420, y: 210, collected: false,
-      text: "5. ¿Cuáles son las variables clásicas de la descripción epidemiológica de un evento?",
+      id: 4, type: 'enemy', x: 1250, y: 180, width: 35, height: 35, vx: 1.5, minX: 1200, maxX: 1340, defeated: false,
+      text: "4. En el marco renovado de las FESP, ¿cuál es la meta de la 'Promoción de la Salud y Participación Ciudadana'?",
       options: [
-        "A) Tensión, Frecuencia y Temperatura.",
-        "B) Tiempo, Lugar y Persona.",
+        "A) Empoderar a la comunidad y modificar determinantes sociales de la salud.",
+        "B) Sancionar económicamente a los ciudadanos con estilos de vida sedentarios.",
+        "C) Obligar el uso de medicamentos preventivos de amplio espectro."
+      ],
+      correct: 0
+    },
+    {
+      id: 5, type: 'coin', x: 1600, y: 210, collected: false,
+      text: "5. ¿Cuál es la función esencial (FESP) orientada a garantizar que toda la población reciba atención de calidad?",
+      options: [
+        "A) Garantía de acceso equitativo a servicios de salud integrales.",
+        "B) Auditoría contable del sistema hospitalario privado.",
+        "C) Regulación del mercado farmacéutico internacional."
+      ],
+      correct: 0
+    },
+    {
+      id: 6, type: 'enemy', x: 1950, y: 180, width: 35, height: 35, vx: -1.5, minX: 1900, maxX: 2040, defeated: false,
+      text: "6. ¿Cuáles son las variables fundamentales del Método Epidemiológico para describir un problema colectivo?",
+      options: [
+        "A) Tiempo, Lugar y Persona.",
+        "B) Tensión, Frecuencia y Temperatura.",
         "C) Media, Mediana y Desviación Estándar."
       ],
-      correct: 1
+      correct: 0
     },
     {
-      id: 6, type: 'enemy', x: 1750, y: 325, width: 35, height: 35, vx: -2, defeated: false,
-      text: "6. ¿Cómo se define el indicador de LETALIDAD en epidemiología?",
+      id: 7, type: 'coin', x: 2300, y: 210, collected: false,
+      text: "7. En Bioestadística, ¿qué diferencia a la INCIDENCIA de la PREVALENCIA?",
       options: [
-        "A) La proporción de enfermos por una causa que fallecen a consecuencia de la misma.",
-        "B) El número de nacimientos registrados por cada 100,000 habitantes.",
-        "C) La cantidad total de personas sanas en riesgo de contagio."
+        "A) Incidencia evalúa casos NUEVOS; Prevalencia mide TODOS los casos acumulados existentes.",
+        "B) Incidencia mide muertes registradas; Prevalencia mide nacimientos anuales.",
+        "C) Ambas indican exactamente la misma tasa de mortalidad."
       ],
       correct: 0
     },
     {
-      id: 7, type: 'coin', x: 2060, y: 200, collected: false,
-      text: "7. ¿En qué consiste la Transición Epidemiológica vivida en México?",
+      id: 8, type: 'enemy', x: 2650, y: 170, width: 35, height: 35, vx: 1.2, minX: 2600, maxX: 2740, defeated: false,
+      text: "8. ¿En qué consiste la Transición Epidemiológica observada en México?",
       options: [
-        "A) El cambio del predominio de infecciones hacia enfermedades crónico-degenerativas.",
-        "B) El paso exclusivo de una población rural a una eminentemente universitaria.",
-        "C) La sustitución total de vacunas por tratamientos hospitalarios."
+        "A) Cambio del predominio de patologías infecciosas a enfermedades crónico-degenerativas.",
+        "B) Incremento acelerado de nacimientos en zonas urbanas.",
+        "C) Eliminación total de enfermedades transmisibles e infectocontagiosas."
       ],
       correct: 0
     },
     {
-      id: 8, type: 'enemy', x: 2380, y: 325, width: 35, height: 35, vx: 1.8, defeated: false,
-      text: "8. ¿Cuál es la tendencia actual de la Transición Demográfica en México?",
+      id: 9, type: 'coin', x: 3000, y: 200, collected: false,
+      text: "9. ¿Para qué aplica el médico general el Método de Hanlon en Salud Pública?",
       options: [
-        "A) Aumento de la tasa de fecundidad infantil exponencial.",
-        "B) Disminución de la natalidad e incremento de la población de adultos mayores.",
-        "C) Reducción general de la esperanza de vida al nacer."
+        "A) Para priorizar problemas de salud considerando magnitud, severidad e intervención.",
+        "B) Para calcular la dosis ponderada de un fármaco.",
+        "C) Para determinar el tipo de muestra microbiológica requerida."
       ],
-      correct: 1
+      correct: 0
     },
     {
-      id: 9, type: 'coin', x: 2720, y: 190, collected: false,
-      text: "9. ¿Para qué se utiliza el Método de Hanlon en Salud Pública?",
+      id: 10, type: 'enemy', x: 3300, y: 325, width: 35, height: 35, vx: -1.8, minX: 3200, maxX: 3450, defeated: false,
+      text: "10. ¿Cuáles son fuentes oficiales nacionales prioritarias para obtener indicadores de salud en México?",
       options: [
-        "A) Para calcular la mediana y desviación típica en un estudio clínico.",
-        "B) Para la priorización de problemas de salud pública basada en magnitud y severidad.",
-        "C) Para determinar el tipo de antibiótico de primera elección."
+        "A) DGE, DGIS, INEGI, CONAPO y ENSANUT.",
+        "B) Expedientes aislados de sanatorios privados.",
+        "C) Encuestas informales de redes sociales."
       ],
-      correct: 1
-    },
-    {
-      id: 10, type: 'coin', x: 2950, y: 220, collected: false,
-      text: "10. ¿Cuáles son fuentes oficiales clave de información epidemiológica en México?",
-      options: [
-        "A) Solamente registros de farmacias comerciales comunitarias.",
-        "B) DGE, DGIS, INEGI, CONAPO y ENSANUT.",
-        "C) Revistas internacionales no validadas ni institucionales."
-      ],
-      correct: 1
+      correct: 0
     }
   ];
 
-  const goal = { x: 3100, y: 260, width: 70, height: 100 };
+  const goal = { x: 3550, y: 260, width: 70, height: 100 };
   let cameraX = 0;
 
   function triggerQuiz(q) {
@@ -417,7 +418,8 @@ window.onload = function() {
           if (q.type === 'coin') {
             q.collected = true;
           } else {
-            q.x -= 120;
+            q.defeated = true;
+            q.x = -999;
           }
 
           setTimeout(function() {
@@ -436,9 +438,9 @@ window.onload = function() {
     lives--;
     updateLives();
     invulnerableTimer = 60;
-    player.vy = -8;
-    player.x -= 40;
-    message = "💥 ¡Te contagiaste! -1 Vida";
+    player.vy = -6;
+    player.x -= 50;
+    message = "💥 ¡Un virus te contagió! Pierdes 1 Vida.";
     if (lives <= 0) gameOver = true;
   }
 
@@ -489,7 +491,7 @@ window.onload = function() {
         }
       } else if (q.type === 'enemy' && !q.defeated) {
         q.x += q.vx;
-        if (q.x < 350 || q.x > 2500) q.vx *= -1;
+        if (q.x < q.minX || q.x > q.maxX) q.vx *= -1;
 
         if (
           player.x < q.x + q.width &&
@@ -497,7 +499,7 @@ window.onload = function() {
           player.y < q.y + q.height &&
           player.y + player.height > q.y
         ) {
-          if (player.vy > 0 && player.y + player.height - player.vy <= q.y + 12) {
+          if (player.vy > 0 && player.y + player.height - player.vy <= q.y + 14) {
             player.vy = -8;
             triggerQuiz(q);
           } else {
