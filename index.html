@@ -185,7 +185,7 @@
   </div>
 
 <script>
-function initGame() {
+window.addEventListener('load', function() {
   var canvas = document.getElementById('gameCanvas');
   if (!canvas) return;
   var ctx = canvas.getContext('2d');
@@ -676,13 +676,7 @@ function initGame() {
   }
 
   gameLoop();
-}
-
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
-  setTimeout(initGame, 1);
-} else {
-  document.addEventListener('DOMContentLoaded', initGame);
-}
+});
 </script>
 </body>
 </html>
