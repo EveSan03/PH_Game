@@ -5,7 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Super Medix: Salud Pública Bros</title>
   <style>
-    * { box-sizing: border-box; touch-action: manipulation; }
+    * { 
+      box-sizing: border-box; 
+      touch-action: manipulation;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
     body {
       margin: 0;
       padding: 0;
@@ -20,8 +26,8 @@
       overflow: hidden;
     }
     h1 {
-      margin: 8px 0 4px;
-      font-size: 20px;
+      margin: 5px 0;
+      font-size: 18px;
       color: #4caf50;
       text-align: center;
     }
@@ -30,68 +36,70 @@
       border: 3px solid #fff;
       box-shadow: 0 0 15px rgba(76, 175, 80, 0.4);
       background-color: #70c5ce;
-      max-width: 100vw;
+      width: 100vw;
+      max-width: 800px;
     }
     canvas {
       display: block;
       width: 100%;
-      max-width: 800px;
       height: auto;
     }
     #ui {
       position: absolute;
-      top: 8px;
-      left: 8px;
-      right: 8px;
+      top: 6px;
+      left: 6px;
+      right: 6px;
       display: flex;
       justify-content: space-between;
       font-weight: bold;
-      font-size: 14px;
+      font-size: 13px;
       color: #000;
       background: rgba(255, 255, 255, 0.9);
-      padding: 6px 12px;
+      padding: 5px 10px;
       border-radius: 6px;
       pointer-events: none;
       z-index: 5;
     }
-    /* Controles Táctiles para Móvil */
+    /* Controles Táctiles Gigantes para Celular */
     #touch-controls {
       display: flex;
       justify-content: space-between;
-      width: 100%;
+      align-items: center;
+      width: 100vw;
       max-width: 800px;
-      padding: 10px 15px;
+      padding: 10px 20px;
       margin-top: 5px;
     }
     .d-pad {
       display: flex;
-      gap: 10px;
+      gap: 15px;
     }
     .btn-touch {
-      background: #333;
+      background: #222;
       color: #fff;
-      border: 2px solid #4caf50;
-      font-size: 22px;
+      border: 3px solid #4caf50;
+      font-size: 26px;
       font-weight: bold;
-      width: 60px;
-      height: 60px;
+      width: 65px;
+      height: 65px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      user-select: none;
-      -webkit-user-select: none;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.5);
     }
     .btn-touch:active {
       background: #4caf50;
       color: #000;
+      transform: scale(0.95);
     }
     .btn-jump {
-      width: 75px;
-      height: 60px;
-      border-radius: 30px;
-      background: #2196F3;
+      width: 90px;
+      height: 65px;
+      border-radius: 35px;
+      background: #1976D2;
       border-color: #fff;
+      font-size: 14px;
     }
     /* Modal de Preguntas */
     #quiz-modal {
@@ -108,106 +116,3 @@
       padding: 15px;
       z-index: 10;
     }
-    #quiz-card {
-      background: #222;
-      border: 3px solid #4caf50;
-      border-radius: 12px;
-      padding: 18px;
-      max-width: 600px;
-      width: 95%;
-      text-align: center;
-    }
-    #quiz-question {
-      font-size: 17px;
-      margin-bottom: 15px;
-      color: #fff;
-      line-height: 1.3;
-    }
-    .quiz-btn {
-      display: block;
-      width: 100%;
-      background: #333;
-      color: #fff;
-      border: 2px solid #555;
-      padding: 10px;
-      margin: 8px 0;
-      font-size: 15px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .quiz-btn:active {
-      background: #4caf50;
-      color: #000;
-    }
-    #feedback {
-      font-size: 16px;
-      font-weight: bold;
-      margin-top: 10px;
-    }
-  </style>
-</head>
-<body>
-
-  <h1>🎮 SUPER MEDIX 🩺</h1>
-  <div id="game-container">
-    <div id="ui">
-      <div id="score">XP: 0 (0/4 Monedas)</div>
-      <div id="lives">Vidas: ❤️❤️❤️❤️</div>
-    </div>
-    
-    <div id="quiz-modal">
-      <div id="quiz-card">
-        <div id="quiz-question">Pregunta...</div>
-        <div id="quiz-options"></div>
-        <div id="feedback"></div>
-      </div>
-    </div>
-
-    <canvas id="gameCanvas" width="800" height="400"></canvas>
-  </div>
-
-  <div id="touch-controls">
-    <div class="d-pad">
-      <div class="btn-touch" id="btn-left">⬅️</div>
-      <div class="btn-touch" id="btn-right">➡️</div>
-    </div>
-    <div class="btn-touch btn-jump" id="btn-jump">🪂 SALTAR</div>
-  </div>
-
-<script>
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
-
-let scoreXP = 0;
-let coinsCollected = 0;
-let lives = 4;
-let gameOver = false;
-let gameWon = false;
-let isPaused = false;
-let message = "";
-let invulnerableTimer = 0;
-
-const keys = { right: false, left: false, up: false };
-
-document.addEventListener('keydown', (e) => {
-  if (isPaused) return;
-  if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;
-  if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;
-  if ((e.key === 'ArrowUp' || e.key === ' ' || e.key === 'w' || e.key === 'W') && !player.jumping) {
-    player.vy = -player.jumpStrength;
-    player.jumping = true;
-  }
-});
-
-document.addEventListener('keyup', (e) => {
-  if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = false;
-  if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = false;
-});
-
-const bindTouch = (id, keyName) => {
-  const btn = document.getElementById(id);
-  btn.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    if (isPaused) return;
-    if (keyName === 'up' && !player.jumping) {
-      player.vy = -player.jump
